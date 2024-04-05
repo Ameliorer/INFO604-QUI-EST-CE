@@ -13,8 +13,7 @@ Class {
 { #category : #examples }
 RuleBase class >> example [ 
 ^self new 
-	add: (Rule newWithCondition: [ :fb | (fb at: 'Couvre-chef') = false ] andAction: [ :fb | fb at: 'Couvre-chef' put: (SpConfirmDialog new label: 'Est-ce que j''ai un couvre-chef ?' ; openModal ) ] );
-	yourself 
+	add: (Rule newWithCondition: [ :fb | (fb at: 'Couvre-chef') isNil ] andAction: [ :fb | fb at: 'Couvre-chef' put: (SpConfirmDialog new label: 'Est-ce que j''ai un couvre-chef ?' ; openModal ). fb enleve: 'Hugo'])
 ]
 
 { #category : #adding }
@@ -37,6 +36,18 @@ RuleBase >> reset [
 rules do: [ :each | each enable: true ]
 
 
+]
+
+{ #category : #accessing }
+RuleBase >> rules [
+
+	^ rules
+]
+
+{ #category : #accessing }
+RuleBase >> rules: anObject [
+
+	rules := anObject
 ]
 
 { #category : #enumerating }

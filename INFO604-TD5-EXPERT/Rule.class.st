@@ -8,11 +8,14 @@ name:		<Object> son nom
 Class {
 	#name : #Rule,
 	#superclass : #Object,
+	#traits : 'TComparable',
+	#classTraits : 'TComparable classTrait',
 	#instVars : [
 		'condition',
 		'action',
 		'enable',
-		'name'
+		'name',
+		'poids'
 	],
 	#category : #'INFO604-TD5-EXPERT'
 }
@@ -24,6 +27,22 @@ r := self new.
 r condition: aConditionBlock.
 r action: aActionBlock.
 ^r
+]
+
+{ #category : #'instance creation' }
+Rule class >> newWithCondition: aConditionBlock andAction: aActionBlock andPoids: aPoidsValue [
+| r | ""
+r := self new.
+r condition: aConditionBlock.
+r action: aActionBlock.
+r poids: aPoidsValue.
+^r
+]
+
+{ #category : #comparing }
+Rule >> < aComparable [
+	"Answer whether the receiver is less than the argument."
+	^self poids < aComparable poids
 ]
 
 { #category : #accessing }
@@ -68,7 +87,9 @@ super initialize .
 name := 'Règle'.
 condition := BlockClosure new.   "bloc vide, un bloc a évalué"
 action := BlockClosure new.
-enable := true
+enable := true.
+poids := 0.
+
 ]
 
 { #category : #accessing }
@@ -81,6 +102,18 @@ Rule >> name [
 Rule >> name: anObject [
 
 	name := anObject
+]
+
+{ #category : #accessing }
+Rule >> poids [
+
+	^ poids
+]
+
+{ #category : #accessing }
+Rule >> poids: anObject [
+
+	poids := anObject
 ]
 
 { #category : #initialization }
