@@ -24,6 +24,13 @@ FactBase class >> example [
 	at: 'Lou' put: true;
 	at: 'Ines' put: true;
 	at: 'Couvre-chef' put: nil;
+	at: 'Lunettes' put: nil;
+	at: 'Yeux-fermés' put: nil;
+	at: 'Bouche-ouverte' put: nil;
+	at: 'Tache-rousseur' put: nil;
+	at: 'Brun' put: nil;
+	at: 'Roux' put: nil;
+	at: 'Fille' put: nil;
 	yourself 
 ]
 
@@ -35,6 +42,12 @@ FactBase >> at: key [
 { #category : #'as yet unclassified' }
 FactBase >> enleve: aKeyFact [
 	self at: aKeyFact put: false.
+	^self
+]
+
+{ #category : #'as yet unclassified' }
+FactBase >> enleveTab: aTabOfKeyFact [
+	aTabOfKeyFact do: [ :each | self at: each put: false ].
 	^self
 ]
 
