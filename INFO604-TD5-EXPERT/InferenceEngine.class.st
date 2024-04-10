@@ -67,13 +67,13 @@ InferenceEngine >> ruleBase: anObject [
 InferenceEngine >> run [ 
 	| regles_active |
 	regles_active := self selectionne_regles_actives.
-	[regles_active isEmpty] whileFalse: 
+	[regles_active isEmpty ] whileFalse: 
 
-[ |r| 
+[ |r b | 
 	"On récupère une regle a evaluer parmis les actives (suivant son poids)"
 	r:= self regle_a_evalueWithRuleBase: regles_active. 
 	"On l'évalue"
-	r value:self factBase . 
+	b:= r value: (self factBase) . 
 	"On met à jour la liste des règles actives "
 	regles_active := self selectionne_regles_actives. ].
 	^self.
