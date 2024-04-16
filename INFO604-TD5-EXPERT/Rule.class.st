@@ -22,11 +22,7 @@ Class {
 
 { #category : #'instance creation' }
 Rule class >> newWithCondition: aConditionBlock andAction: aActionBlock [
-| r | ""
-r := self new.
-r condition: aConditionBlock.
-r action: aActionBlock.
-^r
+^ self newWithCondition: aConditionBlock andAction: aActionBlock andPoids: 1.
 ]
 
 { #category : #'instance creation' }
@@ -82,6 +78,18 @@ Rule >> enable: anObject [
 ]
 
 { #category : #initialization }
+Rule >> evalue: aFactBase [
+"si on l'a déja fait ou si la condition est fausse"
+enable & ( condition value: aFactBase ) ifFalse: [ ^self ]. "Si c'est faux, on s'arrete direct"
+self enable: false.
+^self action value: aFactBase.
+
+
+
+
+]
+
+{ #category : #initialization }
 Rule >> initialize [ 
 super initialize .
 name := 'Règle'.
@@ -114,15 +122,4 @@ Rule >> poids [
 Rule >> poids: anObject [
 
 	poids := anObject
-]
-
-{ #category : #initialization }
-Rule >> value: aFactBase [
-"si on l'a déja fait ou si la condition est fausse"
-enable & ( condition value: aFactBase ) ifFalse: [ ^self ]. "Si c'est faux, on s'arrete direct"
-enable := false.
-^action value: aFactBase.
-
-
-
 ]

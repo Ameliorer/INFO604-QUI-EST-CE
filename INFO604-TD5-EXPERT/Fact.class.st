@@ -64,7 +64,6 @@ Fact >> type: anObject [
 
 { #category : #accessing }
 Fact >> value1 [
-
 	^ value
 ]
 

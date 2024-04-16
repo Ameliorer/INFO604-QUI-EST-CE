@@ -46,6 +46,11 @@ RuleBase >> add: aRule [
 rules add: aRule. "le add de ordered collection, il ajoute a la fin"
 ]
 
+{ #category : #accessing }
+RuleBase >> first [
+	^rules first
+]
+
 { #category : #initialization }
 RuleBase >> initialize [ 
 super initialize .

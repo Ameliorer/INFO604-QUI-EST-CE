@@ -36,15 +36,15 @@ factBase := FactBase new.
 ]
 
 { #category : #'as yet unclassified' }
-InferenceEngine >> regle_a_evalue [
+InferenceEngine >> regleAEvalue [
 	| regle_courante |
 	regle_courante := (self ruleBase) first.
-	self ruleBase do: [ :each | regle_courante := regle_courante max: each ].
+	self ruleBase rules do: [ :each | regle_courante := regle_courante max: each ].
 	^ regle_courante 
 ]
 
 { #category : #'as yet unclassified' }
-InferenceEngine >> regle_a_evalueWithRuleBase: aRuleBase [
+InferenceEngine >> regleAEvalueWithRuleBase: aRuleBase [
 	| regle_courante |
 	regle_courante := (aRuleBase) at: 1.
 	aRuleBase do: [ :each | regle_courante := regle_courante max: each ].
@@ -66,23 +66,27 @@ InferenceEngine >> ruleBase: anObject [
 { #category : #running }
 InferenceEngine >> run [ 
 	| regles_active |
-	regles_active := self selectionne_regles_actives.
-	[regles_active isEmpty ] whileFalse: 
-
-[ |r b | 
+	regles_active := self selectionneReglesActives.
+	Transcript show: 'Règles actives : ', regles_active size printString; cr.
+	[regles_active isEmpty]  whileFalse: 
+	"(regles_active isEmpty)  ifFalse: "
+	[ |r b | 
 	"On récupère une regle a evaluer parmis les actives (suivant son poids)"
-	r:= self regle_a_evalueWithRuleBase: regles_active. 
+	r:= self regleAEvalueWithRuleBase: regles_active.
+	Transcript show: 'Règle sélectionnée pour évaluation : ', r condition printString , ' - ',r action printString; cr.
+	
 	"On l'évalue"
-	b:= r value: (self factBase) . 
+	b:= r evalue: (factBase) . 
+	Transcript show: 'Résultat de l''évaluation : ', b printString; cr.
+	
 	"On met à jour la liste des règles actives "
-	regles_active := self selectionne_regles_actives. ].
+	regles_active := self selectionneReglesActives. ].
+	Transcript show: 'Règles actives mises à jour : ', regles_active size printString; cr.
 	^self.
 ]
 
 { #category : #'as yet unclassified' }
-InferenceEngine >> selectionne_regles_actives [
-	| regles_active |
-	regles_active := OrderedCollection new.
-	self ruleBase rules do: [ :each | (each enable ) ifTrue: [ regles_active add: each ] ].
-	^ regles_active
+InferenceEngine >> selectionneReglesActives [
+	^self ruleBase rules select: [ :each | each enable   ].
+
 ]
