@@ -34,12 +34,14 @@ FactBase class >> example [
 	fb add: (Fact newWithName: 'Tache-rousseur' andType: 'Caracteristique' andValue: nil).
 	fb add: (Fact newWithName: 'Brun' andType: 'Caracteristique' andValue: nil).
 	fb add: (Fact newWithName: 'Roux' andType: 'Caracteristique' andValue: nil).
+	fb add: (Fact newWithName: 'Blond' andType: 'Caracteristique' andValue: nil).
 	fb add: (Fact newWithName: 'Fille' andType: 'Caracteristique' andValue: nil).
 	^fb 
 ]
 
 { #category : #adding }
 FactBase >> add: aFact [
+	self changed.
 	facts add: aFact.
 ]
 
@@ -51,6 +53,7 @@ FactBase >> at: aName [
 { #category : #accessing }
 FactBase >> at: aName put: aValue [
 | f |
+self changed.
 f := self at: aName.
 f value: aValue.
 ^self
@@ -70,6 +73,7 @@ FactBase >> children [
 
 { #category : #'as yet unclassified' }
 FactBase >> enleve: aNameFact [
+	self changed.
 	facts removeAllSuchThat: [ :each | each name = aNameFact ].
 	^self
 ]
@@ -108,7 +112,7 @@ FactBase >> initialize [
 FactBase >> printOn: aStream [
 	(self facts isEmpty)
 		ifTrue: [aStream nextPutAll: 'Aucun enfant ne correspond a votre recherche' ; cr ]
-		ifFalse:[self facts do: [ :each | aStream print: each ; cr ]]
+		ifFalse:[self children do: [ :each | aStream print: each ; cr ]]
 
 ]
 

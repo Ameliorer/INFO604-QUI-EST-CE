@@ -3,17 +3,34 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'factBase',
-		'ruleBase'
+		'ruleBase',
+		'currentRule'
 	],
 	#category : #'INFO604-TD5-EXPERT'
 }
 
 { #category : #examples }
 InferenceEngine class >> example [ 
-^self new 
-	factBase: FactBase example ;
-	ruleBase: RuleBase example ;
-	yourself 
+	| res |
+	res := self new 
+		factBase: FactBase example ;
+		ruleBase: RuleBase example ;
+		yourself.
+	res initializeCurrentRule.
+	^res
+	
+]
+
+{ #category : #accessing }
+InferenceEngine >> currentRule [
+
+	^ currentRule
+]
+
+{ #category : #accessing }
+InferenceEngine >> currentRule: anObject [
+	currentRule := anObject.
+	self changed.
 ]
 
 { #category : #accessing }
@@ -24,15 +41,43 @@ InferenceEngine >> factBase [
 
 { #category : #accessing }
 InferenceEngine >> factBase: anObject [
-
-	factBase := anObject
+	factBase := anObject.
+	self changed.
 ]
 
 { #category : #initialization }
 InferenceEngine >> initialize [ 
-ruleBase := RuleBase new.
-factBase := FactBase new.
+self ruleBase: RuleBase new.
+self factBase: FactBase new.
+self initializeCurrentRule.
 
+]
+
+{ #category : #initialization }
+InferenceEngine >> initializeCurrentRule [
+	| regles_active |
+	
+	" on evalue la condition d'arret." 
+	regles_active := self selectionneReglesActives.
+	(regles_active isEmpty)  
+		
+		ifFalse: " attention s'arreter si 1 enfant"
+			"On choisi la nouvelle regle courante."
+			"On récupère une regle a evaluer parmis les actives (suivant son poids)"
+			[ self currentRule: (self regleAEvalueWithRuleBase: regles_active) ]
+		
+		ifTrue: [ self currentRule: nil ].
+	self changed.
+
+	^self.
+]
+
+{ #category : #printing }
+InferenceEngine >> printOn: aStream [
+
+	self currentRule
+		ifNil: [ aStream nextPutAll: 'Terminé !' ]
+		ifNotNil: [ aStream nextPutAll: self currentRule name ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -59,8 +104,8 @@ InferenceEngine >> ruleBase [
 
 { #category : #accessing }
 InferenceEngine >> ruleBase: anObject [
-
-	ruleBase := anObject
+	ruleBase := anObject.
+	self changed.
 ]
 
 { #category : #running }
@@ -73,6 +118,7 @@ InferenceEngine >> run [
 	[ |r b | 
 	"On récupère une regle a evaluer parmis les actives (suivant son poids)"
 	r:= self regleAEvalueWithRuleBase: regles_active.
+	self currentRule: r. "on stock la regle courante dans l'objet"
 	Transcript show: 'Règle sélectionnée pour évaluation : ', r condition printString , ' - ',r action printString; cr.
 	
 	"On l'évalue"
@@ -82,6 +128,28 @@ InferenceEngine >> run [
 	"On met à jour la liste des règles actives "
 	regles_active := self selectionneReglesActives. ].
 	Transcript show: 'Règles actives mises à jour : ', regles_active size printString; cr.
+	^self.
+]
+
+{ #category : #'as yet unclassified' }
+InferenceEngine >> runAStepWithValue: aValue [
+	| regles_active |
+	
+	"on evalue la regle courante."
+	self currentRule evalueFB: factBase andValue: aValue .
+	
+	" on evalue la condition d'arret." 
+	regles_active := self selectionneReglesActives.
+	((regles_active isEmpty) or: ((self factBase children size) = 1))
+		
+		ifFalse: " attention s'arreter si 1 enfant"
+			"On choisi la nouvelle regle courante."
+			"On récupère une regle a evaluer parmis les actives (suivant son poids)"
+			[ self currentRule: (self regleAEvalueWithRuleBase: regles_active) ]
+		
+		ifTrue: [ self currentRule: nil ].
+	
+	self changed.
 	^self.
 ]
 
