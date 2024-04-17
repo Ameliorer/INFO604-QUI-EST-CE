@@ -7,7 +7,8 @@ Class {
 		'listeEnfantsLabel',
 		'titreListeEnfantsLabel',
 		'trueButton',
-		'falseButton'
+		'falseButton',
+		'dontKnowButton'
 	],
 	#category : #'INFO604-TD5-EXPERT'
 }
@@ -15,13 +16,14 @@ Class {
 { #category : #initialization }
 AkinatorPresenter >> connectPresenters [ 
 	trueButton action: [ self inferenceEngine runAStepWithValue: true. self dealWithFinish ].
-	falseButton action: [ self inferenceEngine runAStepWithValue: false. self dealWithFinish ]
+	falseButton action: [ self inferenceEngine runAStepWithValue: false. self dealWithFinish ].
+	dontKnowButton action: [ self inferenceEngine runAStepWithValue: nil. self dealWithFinish ]
 ]
 
 { #category : #'as yet unclassified' }
 AkinatorPresenter >> dealWithFinish [
-	(self inferenceEngine currentRule)
-		ifNil: [ self layout remove: self layout presenters second. "self layout remove: self layout presenters third" ]
+	((self inferenceEngine currentRule isNil ) or: (self inferenceEngine factBase children isEmpty))
+		ifTrue: [ self layout remove: self layout presenters second.]
 ]
 
 { #category : #layout }
@@ -30,6 +32,7 @@ AkinatorPresenter >> defaultLayout [
 	buttons := SpBoxLayout newHorizontal.
 	buttons add: falseButton.
 	buttons add: trueButton.
+	buttons add: dontKnowButton.
 
 	^SpBoxLayout newVertical 
 		add: questionLabel;
@@ -85,7 +88,10 @@ AkinatorPresenter >> initializePresenter [
 	trueButton label: 'Oui'.
 	
 	falseButton := self newButton.
-	falseButton label: 'Non'
+	falseButton label: 'Non'.
+	
+	dontKnowButton := self newButton.
+	dontKnowButton label: 'Je ne sais pas'
 ]
 
 { #category : #initialization }

@@ -75,9 +75,9 @@ InferenceEngine >> initializeCurrentRule [
 { #category : #printing }
 InferenceEngine >> printOn: aStream [
 
-	self currentRule
-		ifNil: [ aStream nextPutAll: 'Terminé !' ]
-		ifNotNil: [ aStream nextPutAll: self currentRule name ]
+	((self currentRule isNil) or: (self factBase children isEmpty))
+		ifTrue: [ aStream nextPutAll: 'Terminé !' ]
+		ifFalse: [ aStream nextPutAll: self currentRule name ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -92,6 +92,7 @@ InferenceEngine >> regleAEvalue [
 InferenceEngine >> regleAEvalueWithRuleBase: aRuleBase [
 	| regle_courante |
 	regle_courante := (aRuleBase) at: 1.
+	" on cherche une regle avec le poids max"
 	aRuleBase do: [ :each | regle_courante := regle_courante max: each ].
 	^ regle_courante 
 ]
@@ -133,11 +134,12 @@ InferenceEngine >> run [
 
 { #category : #'as yet unclassified' }
 InferenceEngine >> runAStepWithValue: aValue [
-	| regles_active |
+	| regles_active|
 	
+	aValue ifNotNil:[
 	"on evalue la regle courante."
 	self currentRule evalueFB: factBase andValue: aValue .
-	
+	] ifNil:[ self ruleBase rules removeAllSuchThat: [:each | each = self currentRule] ].
 	" on evalue la condition d'arret." 
 	regles_active := self selectionneReglesActives.
 	((regles_active isEmpty) or: ((self factBase children size) = 1))
@@ -155,6 +157,6 @@ InferenceEngine >> runAStepWithValue: aValue [
 
 { #category : #'as yet unclassified' }
 InferenceEngine >> selectionneReglesActives [
-	^self ruleBase rules select: [ :each | each enable   ].
+	^self ruleBase rules select: [ :each | (each enable) and:(each condition value: self factBase ) ].
 
 ]

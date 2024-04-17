@@ -57,6 +57,13 @@ Rule >> < aComparable [
 	^self poids < aComparable poids
 ]
 
+{ #category : #comparing }
+Rule >> = aComparable [
+	"Compare the receiver with the argument and answer with true if the
+	receiver is equal to the argument. Otherwise answer false."
+	^self name = aComparable name
+]
+
 { #category : #accessing }
 Rule >> action [
 

@@ -41,8 +41,8 @@ FactBase class >> example [
 
 { #category : #adding }
 FactBase >> add: aFact [
-	self changed.
 	facts add: aFact.
+	self changed.
 ]
 
 { #category : #accessing }
@@ -53,9 +53,9 @@ FactBase >> at: aName [
 { #category : #accessing }
 FactBase >> at: aName put: aValue [
 | f |
-self changed.
 f := self at: aName.
 f value: aValue.
+self changed.
 ^self
 ]
 
@@ -73,8 +73,8 @@ FactBase >> children [
 
 { #category : #'as yet unclassified' }
 FactBase >> enleve: aNameFact [
-	self changed.
 	facts removeAllSuchThat: [ :each | each name = aNameFact ].
+	self changed.
 	^self
 ]
 
@@ -110,7 +110,7 @@ FactBase >> initialize [
 
 { #category : #printing }
 FactBase >> printOn: aStream [
-	(self facts isEmpty)
+	(self children isEmpty)
 		ifTrue: [aStream nextPutAll: 'Aucun enfant ne correspond a votre recherche' ; cr ]
 		ifFalse:[self children do: [ :each | aStream print: each ; cr ]]
 
