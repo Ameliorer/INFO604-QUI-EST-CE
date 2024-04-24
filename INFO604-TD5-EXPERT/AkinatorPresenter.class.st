@@ -8,7 +8,8 @@ Class {
 		'titreListeEnfantsLabel',
 		'trueButton',
 		'falseButton',
-		'dontKnowButton'
+		'dontKnowButton',
+		'image'
 	],
 	#category : #'INFO604-TD5-EXPERT'
 }
@@ -26,19 +27,21 @@ AkinatorPresenter >> dealWithFinish [
 		ifTrue: [ self layout remove: self layout presenters second.]
 ]
 
-{ #category : #layout }
+{ #category : #'as yet unclassified' }
 AkinatorPresenter >> defaultLayout [
 	| buttons |
-	buttons := SpBoxLayout newHorizontal.
+	buttons := SpBoxLayout newHorizontal spacing: 10.
 	buttons add: falseButton.
 	buttons add: trueButton.
 	buttons add: dontKnowButton.
 
 	^SpBoxLayout newVertical 
-		add: questionLabel;
-		add: buttons ;
-		add: titreListeEnfantsLabel;
-		add: listeEnfantsLabel;
+		spacing: 30;
+		add: questionLabel expand: false;
+		add: buttons expand: false;
+		add: titreListeEnfantsLabel expand: false;
+		add: listeEnfantsLabel expand: false;
+		add: image expand: false;
 		yourself 
 		
 ]
@@ -91,14 +94,17 @@ AkinatorPresenter >> initializePresenter [
 	falseButton label: 'Non'.
 	
 	dontKnowButton := self newButton.
-	dontKnowButton label: 'Je ne sais pas'
+	dontKnowButton label: 'Je ne sais pas'.
+	
+	image := self newImage.
+	image image: (ImageReadWriter formFromFileNamed:'children.png' ).
 ]
 
 { #category : #initialization }
 AkinatorPresenter >> initializeWindow: aWindowPresenter [
 	aWindowPresenter 
 		title: 'Akinator';
-		initialExtent: 500@500
+		initialExtent: 600@350
 ]
 
 { #category : #accessing }

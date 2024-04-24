@@ -47,7 +47,7 @@ Fact >> name: anObject [
 
 { #category : #printing }
 Fact >> printOn: aStream [
-	aStream nextPutAll: name; cr.
+	aStream nextPutAll: self name.
 ]
 
 { #category : #accessing }

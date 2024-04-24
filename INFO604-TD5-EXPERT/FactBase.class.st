@@ -110,10 +110,17 @@ FactBase >> initialize [
 
 { #category : #printing }
 FactBase >> printOn: aStream [
-	(self children isEmpty)
-		ifTrue: [aStream nextPutAll: 'Aucun enfant ne correspond a votre recherche' ; cr ]
-		ifFalse:[self children do: [ :each | aStream print: each ; cr ]]
 
+	self children isEmpty
+	
+		ifTrue: [ aStream
+				nextPutAll: 'Aucun enfant ne correspond a votre recherche';
+				cr ]
+		
+		ifFalse: [
+			self children do: [ :each |
+				aStream
+					print: each; nextPutAll: ' ' ] ]
 ]
 
 { #category : #accessing }
